@@ -5,19 +5,8 @@ node {
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
     ]]) {
-        stage('deploy') {
-            sh 'echo \'provider "aws" { region = "eu-west-1" } \
-                                                               \
-                       resource "aws_vpc" "my_vpc" {           \
-                           cidr_block = "10.0.1.0/24"          \
-                                                               \
-                           tags {                              \
-                               Name = "my_vpctest"             \
-                               Group = "my_infratest"          \
-                           }                                   \
-                       }\' > main.tf'
-        }
         stage('terra_init') {
+            sh 'cd vpc'
             sh 'terraform init'
         }
         stage('terra_plan') {
