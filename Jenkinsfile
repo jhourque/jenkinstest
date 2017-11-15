@@ -2,20 +2,23 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('init') {
             steps {
-                echo 'Building..'
                 sh 'ls -R'
             }
         }
-        stage('Test') {
+        stage('plan') {
             steps {
                 echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws_creds',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    sh 'cd vpc'
+                    sh 'terraform plan'
+                }
             }
         }
     }
