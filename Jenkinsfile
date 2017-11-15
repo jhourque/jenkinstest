@@ -6,7 +6,7 @@ node {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
     ]]) {
         stage('terra_init') {
-            sh 'tree'
+            sh 'ls -r'
             sh 'cd jenkinstest/vpc'
             sh 'terraform init'
         }
