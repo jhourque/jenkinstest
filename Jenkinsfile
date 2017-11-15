@@ -1,17 +1,22 @@
-node {
-    withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws_creds',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-    ]]) {
-        stage('terra_init') {
-            sh 'ls -R'
-            sh 'cd vpc'
-            sh 'terraform init'
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building..'
+                sh 'ls -R'
+            }
         }
-        stage('terra_plan') {
-            sh 'terraform plan'
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
         }
     }
 }
