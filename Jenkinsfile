@@ -1,13 +1,13 @@
 pipeline {
     agent any
 
-    withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws_creds',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-    ]]) {
-	    stages {
+    stages {
+	    withCredentials([[
+			    $class: 'AmazonWebServicesCredentialsBinding',
+			    credentialsId: 'aws_creds',
+			    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+			    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+	    ]]) {
 	        stage('deploy') {
 	            sh 'echo \'provider "aws" { region = "eu-west-1" } \
 	                                                               \
@@ -27,5 +27,5 @@ pipeline {
 	            sh 'terraform plan'
 	        }
 	    }
-	}
+    }
 }
