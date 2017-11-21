@@ -2,30 +2,46 @@ pipeline {
     agent any
 
     stages {
-        stage('init') {
+        stage('fmt') {
             steps {
-                sh 'ls -R'
                 withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws_creds',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    sh 'env'
-                    sh 'cd vpc; terraform init'
+                    dir ("web") {
+                        sh 'terraform init'
+                        sh 'terraform fmt'
+                    }
                 }
             }
         }
         stage('plan') {
             steps {
-                echo 'Testing..'
                 withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws_creds',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    sh 'cd vpc; terraform plan'
+                    dir ("web") {
+                        sh 'terraform plan'
+                    }
+                }
+            }
+        }
+        stage('apply') {
+            steps {
+                withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws_creds',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    dir ("web") {
+                        sh 'echo terraform apply'
+                    }
                 }
             }
         }
